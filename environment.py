@@ -1,5 +1,7 @@
 import numpy as np
 import random
+from queue import Queue
+from collections import deque
 
 M = 5
 N = 5
@@ -62,6 +64,63 @@ def performance_Random_Agent():
         result += randomized_agent()
     print("Random_Agent:\nAverage performance of 100 runs is: %f" %(result / 100))
 performance_Random_Agent()
+
+
+
+def randomized_agent_Ash():
+    M = 5 
+    N = 5
+    dirt_percentage = 70
+    environment = initialize_environment(M, N, dirt_percentage)
+
+    R, C = len(environment), len(environment[0])
+
+    for i in range(R): 
+        for j in range(C): 
+            choice = random.choice(["UP", "DOWN", "LEFT", "RIGHT", "SUCK"])
+            if choice == "UP": 
+                if i == 0: 
+                    break
+            elif choice == "DOWN": 
+                if i == R - 1:
+                    break
+            elif choice == "LEFT": 
+                if j == 0: 
+                    break
+            elif choice == "RIGHT":
+                if j == C - 1:
+                    break
+            else:
+                return choice 
+
+def reflex_agent(percepts):
+    M = 5 
+    N = 5
+    dirt_percentage = 70
+    environment = initialize_environment(M, N, dirt_percentage)
+
+    R, C = len(environment), len(environment[0])
+
+    rowPercept = percepts[0]
+    colPercept = percepts[1]
+
+    if environment[rowPercept][colPercept] == 1:
+        return "SUCK"
+    if rowPercept == 0 and colPercept == 0:
+        return random.choice(["DOWN", "RIGHT"])
+    elif rowPercept == 0 and colPercept == C - 1: 
+        return random.choice(["DOWN", "LEFT"])
+    elif rowPercept == R - 1 and colPercept == 0: 
+        return random.choice(["RIGHT", "UP"])
+    elif rowPercept == R - 1 and colPercept == C - 1: 
+        return random.choice(["LEFT", "UP"])
+    else: 
+        return random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
+    
+print(randomized_agent_Ash())
+print("Second function")
+print(reflex_agent([0,0]))
+
 
 
 

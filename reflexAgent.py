@@ -8,7 +8,6 @@ class reflexAgent:
     
     def update_environment(self, env):
         env.update_env(self.curr_x, self.curr_y)
-        # dirtCount += 1
 
     def update_agent_path(self, action):
         if action == "UP":
@@ -21,7 +20,7 @@ class reflexAgent:
             self.curr_y += 1
 
     def action(self, env):
-        act = self.__reflex_acton(env)
+        act = self.__reflex_action(env)
         #update the env
         if act == "SUCK":
             self.update_environment(env)
@@ -29,7 +28,7 @@ class reflexAgent:
         #update agent path
             self.update_agent_path(act)
         
-    def __reflex_acton(self, env):
+    def __reflex_action(self, env):
         #add functionality to return a reflex action
         R = env.get_bounds()[1]
         C = env.get_bounds()[0]

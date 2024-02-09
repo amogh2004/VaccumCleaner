@@ -1,24 +1,20 @@
 from environment import Environment
-import numpy as np
-
+import random
 
 class ModelBasedReflexAgent:
-    def __init__(self, environment):
-        self.environment = environment
-        self.location = (0, 0)  # Starting at the top-left corner
+    def __init__(self, start_x, start_y):
+        self.location = (start_x, start_y)  
         self.model = {
             "PerceptHistory": {}  # Initializing percept history
         }
-
-    def sense(self):
+    def sense(self, env):
         # Sensing the current location's state and update the agent's model
         x, y = self.location
-        percept = "Dirty" if self.environment.is_dirty(x, y) else "Clean"
+        percept = "Dirty" if env.is_dirty(x, y) else "Clean"
         self.model["PerceptHistory"][self.location] = percept
-
-    def act(self):
+    def act(self, env):
         # Deciding the action based on the percept history
-        C, R= self.environment.get_bounds()
+        C, R= env.get_bounds()
         x, y = self.location
         if self.model["PerceptHistory"].get(self.location) == "Dirty":
             return "Suck"
@@ -33,42 +29,37 @@ class ModelBasedReflexAgent:
         else:
             # If no dirty percept nearby, moves randomly
             possible_moves = []
-            if x > 0: possible_moves.append("Up")
-            if x < R-1: possible_moves.append("Down")
-            if y > 0: possible_moves.append("Left")
-            if y < C-1: possible_moves.append("Right")
-            return np.random.choice(possible_moves)
-
-    def move(self, action):
+            if y > 0: possible_moves.append("Up")
+            if y < R-1: possible_moves.append("Down")
+            if x > 0: possible_moves.append("Left")
+            if x < C-1: possible_moves.append("Right")
+            return random.choice(possible_moves)
+    def move(self, action, env):
         # Moving the agent according to the action
-        C, R= self.environment.get_bounds()
+        C, R= env.get_bounds()
         x, y = self.location
         if action == "Suck":
-            self.environment.update_env(x, y)
-        elif action == "Down" and x < R-1:
-            self.location = (x+1, y)
-        elif action == "Up" and x>0:
-            self.location = (x-1, y)
-        elif action == "Right" and y<C-1:
+            env.update_env(x, y)
+        elif action == "Down" and y < R-1:
             self.location = (x, y+1)
-        elif action == "Left" and y>0:
+        elif action == "Up" and y>0:
             self.location = (x, y-1)
+        elif action == "Right" and x<C-1:
+            self.location = (x+1, y)
+        elif action == "Left" and x>0:
+            self.location = (x-1, y)
 
-# test
-M = 10
-N = 10
-dirt_percentage = 20
+#test
+env = Environment(10, 10)
+env.add_dirt(20)
+agent = ModelBasedReflexAgent(5, 5)
+env.visualize()
+print(env.get_stats())
 
-env = Environment(M, N)
-env.add_dirt(dirt_percentage)
-
-agent = ModelBasedReflexAgent(env)
-
-# Running the agent for a few steps
-for _ in range(100):
-    agent.sense()
-    action = agent.act()
-    agent.move(action)
+for i in range(100):
+    agent.sense(env)
+    action=agent.act(env)
+    agent.move(action, env)
 
 env.visualize()
 print(env.get_stats())

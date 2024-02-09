@@ -18,6 +18,7 @@ class ModelBasedReflexAgent:
 
     def act(self):
         # Deciding the action based on the percept history
+        C, R= self.environment.get_bounds()
         x, y = self.location
         if self.model["PerceptHistory"].get(self.location) == "Dirty":
             return "Suck"
@@ -31,23 +32,29 @@ class ModelBasedReflexAgent:
             return "Left"
         else:
             # If no dirty percept nearby, moves randomly
-            return np.random.choice(["Up", "Down", "Left", "Right"])
+            possible_moves = []
+            if x > 0: possible_moves.append("Up")
+            if x < R-1: possible_moves.append("Down")
+            if y > 0: possible_moves.append("Left")
+            if y < C-1: possible_moves.append("Right")
+            return np.random.choice(possible_moves)
 
     def move(self, action):
         # Moving the agent according to the action
+        C, R= self.environment.get_bounds()
         x, y = self.location
         if action == "Suck":
             self.environment.update_env(x, y)
-        elif action == "Down":
-            self.location = (x, y + 1)
-        elif action == "Up":
-            self.location = (x, y - 1)
-        elif action == "Right":
-            self.location = (x + 1, y)
-        elif action == "Left":
-            self.location = (x - 1, y)
+        elif action == "Down" and x < R-1:
+            self.location = (x+1, y)
+        elif action == "Up" and x>0:
+            self.location = (x-1, y)
+        elif action == "Right" and y<C-1:
+            self.location = (x, y+1)
+        elif action == "Left" and y>0:
+            self.location = (x, y-1)
 
-
+# test
 M = 10
 N = 10
 dirt_percentage = 20

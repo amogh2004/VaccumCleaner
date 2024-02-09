@@ -1,60 +1,47 @@
-from environment import Environment
 import numpy as np
+import random
+from environment import Environment
 
 
 class ModelBasedReflexAgent:
-    def __init__(self, environment):
-        self.environment = environment
-        self.location = (0, 0)  # Starting at the top-left corner
-        self.model = {
-            "PerceptHistory": {}  # Initializing percept history
-        }
 
-    def sense(self):
-        # Sensing the current location's state and update the agent's model
-        x, y = self.location
-        percept = "Dirty" if self.environment.is_dirty(x, y) else "Clean"
-        self.model["PerceptHistory"][self.location] = percept
+    def __init__(self, start_x, start_y):
+        self.curr_x = start_x
+        self.curr_y = start_y
+        self.history = {}
 
-    def act(self):
-        # Deciding the action based on the percept history
-        C, R= self.environment.get_bounds()
-        x, y = self.location
-        if self.model["PerceptHistory"].get(self.location) == "Dirty":
-            return "Suck"
-        elif (x, y + 1) in self.model["PerceptHistory"] and self.model["PerceptHistory"][(x, y + 1)] == "Dirty":
-            return "Down"
-        elif (x, y - 1) in self.model["PerceptHistory"] and self.model["PerceptHistory"][(x, y - 1)] == "Dirty":
-            return "Up"
-        elif (x + 1, y) in self.model["PerceptHistory"] and self.model["PerceptHistory"][(x + 1, y)] == "Dirty":
-            return "Right"
-        elif (x - 1, y) in self.model["PerceptHistory"] and self.model["PerceptHistory"][(x - 1, y)] == "Dirty":
-            return "Left"
+    def action(self, env):
+        act = self.__model_based_reflex_action(env)
+        self.__update_environment(env)
+        self.__update_agent_path(act)
+
+    def __model_based_reflex_action(self, env):
+        if self.history.get((self.curr_x, self.curr_y)) == "Dirty":
+            return "SUCK"
         else:
-            # If no dirty percept nearby, moves randomly
-            possible_moves = []
-            if x > 0: possible_moves.append("Up")
-            if x < R-1: possible_moves.append("Down")
-            if y > 0: possible_moves.append("Left")
-            if y < C-1: possible_moves.append("Right")
-            return np.random.choice(possible_moves)
+            return self.__random_movement()
 
-    def move(self, action):
-        # Moving the agent according to the action
-        C, R= self.environment.get_bounds()
-        x, y = self.location
-        if action == "Suck":
-            self.environment.update_env(x, y)
-        elif action == "Down" and x < R-1:
-            self.location = (x+1, y)
-        elif action == "Up" and x>0:
-            self.location = (x-1, y)
-        elif action == "Right" and y<C-1:
-            self.location = (x, y+1)
-        elif action == "Left" and y>0:
-            self.location = (x, y-1)
+    def __update_environment(self, env):
+        env.update_env(self.curr_x, self.curr_y)
 
-# test
+    def __update_agent_path(self, action):
+        if action == "UP":
+            self.curr_x = max(self.curr_x - 1, 0)
+        elif action == "DOWN":
+            self.curr_x = min(self.curr_x + 1, env.height - 1)
+        elif action == "LEFT":
+            self.curr_y = max(self.curr_y - 1, 0)
+        elif action == "RIGHT":
+            self.curr_y = min(self.curr_y + 1, env.width - 1)
+
+    def __random_movement(self):
+        return random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
+
+    def visualize_agent_movement(self, env):
+        print("Agent current position:", self.curr_x, self.curr_y)
+
+
+# Test the implementation
 M = 10
 N = 10
 dirt_percentage = 20
@@ -62,13 +49,14 @@ dirt_percentage = 20
 env = Environment(M, N)
 env.add_dirt(dirt_percentage)
 
-agent = ModelBasedReflexAgent(env)
+start_x = M // 2
+start_y = N // 2
+
+agent = ModelBasedReflexAgent(start_x, start_y)
 
 # Running the agent for a few steps
 for _ in range(100):
-    agent.sense()
-    action = agent.act()
-    agent.move(action)
+    agent.action(env)
 
 env.visualize()
 print(env.get_stats())

@@ -8,8 +8,8 @@ def main():
     The main function to run the simulation of vacuum cleaner agents.
     """
     # Call the functions or instantiate the classes from each Python file
-    RandomAgent()  # Creating an instance of the RandomAgent class
-    reflexAgent()  # Creating an instance of the reflexAgent class
+    RandomAgent(5, 5)  # Creating an instance of the RandomAgent class
+    reflexAgent(5, 5)  # Creating an instance of the reflexAgent class
     ModelBasedReflexAgent()  # Creating an instance of the ModelBasedReflexAgent class
 
 if __name__ == "__main__":

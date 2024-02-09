@@ -8,13 +8,6 @@ class VisualizeAgents:
         self.agents = agents
         self.steps = steps
 
-    def run_simulation(self):
-        for agent in self.agents:
-            for _ in range(self.steps):
-                agent.sense()
-                action = agent.act()
-                agent.move(action)
-
     def plot_performance_metrics(self):
         plt.figure(figsize=(10, 6))
         for agent in self.agents:

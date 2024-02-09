@@ -1,68 +1,76 @@
-def reflex_agent(percepts, environment):
+import random
+from environment import Environment
+
+class reflexAgent:
+    def __init__(self, start_x, start_y):
+        self.curr_x = start_x
+        self.curr_y = start_y
     
-    R, C = len(environment), len(environment[0])
+    def update_environment(self, env):
+        env.update_env(self.curr_x, self.curr_y)
+        # dirtCount += 1
 
-    rowPercept = percepts[0]
-    colPercept = percepts[1]
-    
-    if environment[rowPercept][colPercept] == 1:
-        environment[rowPercept][colPercept] == 0
-        return "SUCK"
-    if rowPercept == 0 and colPercept == 0:
-        choice = random.choice(["DOWN", "RIGHT"])
-        if choice == "DOWN": 
-            percepts = [rowPercept + 1, colPercept]
-            reflex_agent(percepts)
-        elif choice == "RIGHT":
-            percepts = [rowPercept, colPercept + 1]
-            reflex_agent(percepts)
-    elif rowPercept == 0 and colPercept == C - 1: 
-        choice = random.choice(["DOWN", "LEFT"])
-        if choice == "DOWN": 
-            percepts = [rowPercept + 1, colPercept]
-            reflex_agent(percepts)
-        elif choice == "LEFT":
-            percepts = [rowPercept, colPercept - 1]
-            reflex_agent(percepts)
-    elif rowPercept == R - 1 and colPercept == 0: 
-        choice = random.choice(["RIGHT", "UP"])
-        if choice == "UP": 
-            percepts = [rowPercept - 1, colPercept]
-            reflex_agent(percepts)
-        elif choice == "RIGHT":
-            percepts = [rowPercept, colPercept + 1]
-            reflex_agent(percepts)
-    elif rowPercept == R - 1 and colPercept == C - 1: 
-        choice = random.choice(["LEFT", "UP"])
-        if choice == "UP": 
-            percepts = [rowPercept - 1, colPercept]
-            reflex_agent(percepts)
-        elif choice == "LEFT":
-            percepts = [rowPercept, colPercept - 1]
-            reflex_agent(percepts)
-    else: 
-        choice = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
-        if choice == "UP": 
-            percepts = [rowPercept - 1, colPercept]
-            reflex_agent(percepts)
-        elif choice == "RIGHT":
-            percepts = [rowPercept, colPercept + 1]
-            reflex_agent(percepts)
-        elif choice == "LEFT":
-            percepts = [rowPercept, colPercept - 1]
-            reflex_agent(percepts)
-        if choice == "DOWN": 
-            percepts = [rowPercept + 1, colPercept]
-            reflex_agent(percepts)
+    def update_agent_path(self, action):
+        if action == "UP":
+            self.curr_x -= 1
+        elif action == "DOWN":
+            self.curr_x += 1
+        elif action == "LEFT":
+            self.curr_y -= 1
+        elif action == "RIGHT":
+            self.curr_y += 1
 
-M = 5 
-N = 5
-dirt_percentage = 70
-environment = initialize_environment(M, N, dirt_percentage)
-print("Reflex environment")
+    def action(self, env):
+        act = self.__reflex_acton(env)
+        #update the env
+        if act == "SUCK":
+            self.update_environment(env)
+        else:
+        #update agent path
+            self.update_agent_path(act)
+        
+    def __reflex_acton(self, env):
+        #add functionality to return a reflex action
+        R = env.get_bounds()[1]
+        C = env.get_bounds()[0]
+        env.update_agent_path(self.curr_x, self.curr_y)
 
-dirtCount = 0
-positionRow = random.randint(1, N-1)
-positionCol = random.randint(1, M-1)
-percepts = [positionRow, positionCol]
-reflex_agent(environment, percepts)
+        if env.is_dirty(self.curr_x, self.curr_y):
+            return "SUCK"
+        elif self.curr_x == 0 and self.curr_y == 0:
+            return random.choice(["DOWN", "RIGHT"]) 
+        elif self.curr_x == 0 and self.curr_y == C - 1:
+            return random.choice(["DOWN", "LEFT"])
+        elif self.curr_x == R - 1 and self.curr_y == 0:
+            return random.choice(["RIGHT", "UP"])
+        elif self.curr_x == R - 1 and self.curr_y == C - 1:
+            return random.choice(["LEFT", "UP"])
+        elif self.curr_x == 0: 
+            return random.choice(["DOWN", "RIGHT", "LEFT"])
+        elif self.curr_x == R - 1: 
+            return random.choice(["RIGHT", "LEFT", "UP"])  
+        elif self.curr_y == 0: 
+            return random.choice(["DOWN", "RIGHT", "UP"])
+        elif self.curr_y == C - 1: 
+            return random.choice(["DOWN", "LEFT", "UP"])  
+        else:
+            return random.choice(["DOWN", "UP", "LEFT", "RIGHT"])
+       
+    def visualize_agent_movement(self, env):
+        #add functionality to visualize environment 
+        print(self.curr_x, self.curr_y)
+
+
+#test
+env = Environment(10, 10)
+env.add_dirt(60)
+agent = reflexAgent(5, 5)
+env.visualize()
+print(env.get_stats())
+
+for i in range(100):
+    result = agent.action(env)
+
+env.visualize()
+print(env.get_stats())
+

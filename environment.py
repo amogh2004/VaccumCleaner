@@ -35,7 +35,7 @@ class Environment:
 
     def update_agent_path(self, x, y):
         # Record the agent's path by marking the specified tile (x, y) as visited.
-        self.agent_has_been[y][x] = 1
+        self.agent_has_been[y][x] = 2
 
     def get_stats(self):
         # Get statistics about the environment, including total dirt and total clean tiles.

@@ -10,7 +10,7 @@ def main():
     # Call the functions or instantiate the classes from each Python file
     RandomAgent(5, 5)  # Creating an instance of the RandomAgent class
     reflexAgent(5, 5)  # Creating an instance of the reflexAgent class
-    ModelBasedReflexAgent()  # Creating an instance of the ModelBasedReflexAgent class
+    ModelBasedReflexAgent(5, 5)  # Creating an instance of the ModelBasedReflexAgent class
 
 if __name__ == "__main__":
     # Create an ArgumentParser object for parsing command-line arguments

@@ -42,12 +42,16 @@ class ModelBasedReflexAgent:
             env.update_env(x, y)
         elif action == "Down" and y < R-1:
             self.location = (x, y+1)
+            env.update_agent_path(x, y+1)
         elif action == "Up" and y>0:
             self.location = (x, y-1)
+            env.update_agent_path(x, y-1)
         elif action == "Right" and x<C-1:
             self.location = (x+1, y)
+            env.update_agent_path(x+1, y)
         elif action == "Left" and x>0:
             self.location = (x-1, y)
+            env.update_agent_path(x-1, y)
 
 #test
 env = Environment(10, 10)

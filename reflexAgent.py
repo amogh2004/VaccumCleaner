@@ -5,7 +5,8 @@ class reflexAgent:
     def __init__(self, start_x, start_y):
         self.curr_x = start_x
         self.curr_y = start_y
-    
+        self.path = [(start_x, start_y)]
+        self.dirty_cells_cleaned = [0]
     def update_environment(self, env):
         env.update_env(self.curr_x, self.curr_y)
 
@@ -24,9 +25,11 @@ class reflexAgent:
         #update the env
         if act == "SUCK":
             self.update_environment(env)
+            self.dirty_cells_cleaned.append(self.dirty_cells_cleaned[-1] + 1)
         else:
         #update agent path
             self.update_agent_path(act)
+            self.path.append((self.curr_x, self.curr_y))
         
     def __reflex_action(self, env):
         #add functionality to return a reflex action

@@ -57,18 +57,7 @@ class ModelBasedReflexAgent:
 
         # Update path with the new location after any move or action
         self.path.append(self.location)
+    
+    def __str__(self):
+        return 'Model Based Reflex Agent'
 
-#test
-env = Environment(10, 10)
-env.add_dirt(20)
-agent = ModelBasedReflexAgent(5, 5)
-env.visualize()
-print(env.get_stats())
-
-for i in range(100):
-    agent.sense(env)
-    action=agent.act(env)
-    agent.move(action, env)
-
-env.visualize()
-print(env.get_stats())

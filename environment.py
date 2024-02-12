@@ -38,10 +38,9 @@ class Environment:
         self.agent_has_been[y][x] = 2
 
     def get_stats(self):
-        # Get statistics about the environment, including total dirt and total clean tiles.
+        # Get statistics about the environment, including total dirt
         total_dirt = np.sum(self.floor)
-        total_clean = self.width * self.height - total_dirt
-        return {"Total Dirt": total_dirt, "Total Clean": total_clean}
+        return total_dirt
 
     def visualize(self):
         # Visualize the environment (floor) and the agent's path.
@@ -50,13 +49,3 @@ class Environment:
         print("Agent Path:")
         print(self.agent_has_been)
 
-
-# Example usage:
-M = 5
-N = 5
-dirt_percentage = 20
-
-env = Environment(M, N)
-env.add_dirt(dirt_percentage)
-env.visualize()
-print(env.get_stats())

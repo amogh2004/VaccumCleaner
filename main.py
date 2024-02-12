@@ -10,29 +10,120 @@ def main():
     The main function to run the simulation of vacuum cleaner agents.
     """
     # Call the functions or instantiate the classes from each Python file
-    env=Environment(10,10)
-    env.add_dirt(20)
-    agent1=RandomAgent(5, 5) # Creating an instance of the RandomAgent class
-    agent2=reflexAgent(5, 5)  # Creating an instance of the reflexAgent class
-    agent3=ModelBasedReflexAgent(5, 5)  # Creating an instance of the ModelBasedReflexAgent class
+
+
+
+#---------------Random Agent average of 100 runs-----------#
+    afterRandomAgent = []
+    for ii in range(100):
+        env=Environment(5,5)
+        env.add_dirt(40)
+
+        agent=RandomAgent(2, 2) # Creating an instance of the RandomAgent class
+
+        dirty_tiles = env.get_stats()
+
+        for i in range(100):
+            res=agent.action(env)
+            if (res==-1):
+                break
+        
+        afterRandomAgent.append(dirty_tiles - env.get_stats())
+    
+    print('Average number of Tiles cleaned from Random Agent is:' + str(sum(afterRandomAgent)/len(afterRandomAgent)))
+
+#plotting one run
+    env1=Environment(5,5)
+    env1.add_dirt(40)
+    agent1=RandomAgent(2, 2) 
+    visualizer1 = VisualizeAgents(env1, agent1)
+
+    visualizer1.visualize_floor_before()
+    visualizer1.visualize_agentPath_before()
 
     for i in range(100):
-        res1=agent1.action(env)
-        if (res1==-1):
+        res=agent1.action(env1)
+        if (res==-1):
             break
-    for j in range(100):
-        res2=agent2.action(env)
-    for k in range(100):
-        agent3.sense(env)
-        action=agent3.act(env)
-        agent3.move(action, env)
-    
-    env.visualize()
-    agents=[agent1, agent2, agent3]
-    visualizer = VisualizeAgents(env, agents)
-    visualizer.plot_performance_metrics()
-    visualizer.visualize_paths()   
+
+    visualizer1.visualize_floor_after()  
+    visualizer1.visualize_agentPath_after()
+
+
+#----------------Reflex Agent average of 100 runs--------------#
+
+    afterReflexAgent = []
+    for ii in range(100):
+        env=Environment(5,5)
+        env.add_dirt(40)
+
+        agent=reflexAgent(2, 2) # Creating an instance of the RandomAgent class
+
+        dirty_tiles = env.get_stats()
+
+        for i in range(100):
+            res=agent.action(env)
         
+        afterReflexAgent.append(dirty_tiles - env.get_stats())
+    
+    print('Average number of Tiles cleaned from Reflex Agent is:' + str(sum(afterReflexAgent)/len(afterReflexAgent)))
+
+#plotting one run
+    env2=Environment(5,5)
+    env2.add_dirt(40)
+    agent2=reflexAgent(2, 2) 
+    visualizer2 = VisualizeAgents(env2, agent2)
+
+    visualizer2.visualize_floor_before()
+    visualizer2.visualize_agentPath_before()
+
+    for i in range(100):
+        res=agent2.action(env2)
+
+    visualizer2.visualize_floor_after()  
+    visualizer2.visualize_agentPath_after()
+
+
+#-------------Model Based Reflex Agent average of 100 runs-----------#
+
+    afterModelReflexAgent = []
+    for ii in range(100):
+        env=Environment(5,5)
+        env.add_dirt(40)
+
+        agent=ModelBasedReflexAgent(2, 2) # Creating an instance of the RandomAgent class
+
+        dirty_tiles = env.get_stats()
+
+        for i in range(100):
+            agent.sense(env)
+            action=agent.act(env)
+            agent.move(action, env)
+        
+        afterModelReflexAgent.append(dirty_tiles - env.get_stats())
+    
+    print('Average number of Tiles cleaned from Model Reflex Agent is:' + str(sum(afterModelReflexAgent)/len(afterModelReflexAgent)))
+ 
+#plotting one run
+    env3=Environment(5,5)
+    env3.add_dirt(40)
+    agent3=ModelBasedReflexAgent(2, 2)
+    visualizer3 = VisualizeAgents(env3, agent3)
+
+    visualizer3.visualize_floor_before()
+    visualizer3.visualize_agentPath_before()
+
+    for i in range(100):
+        agent3.sense(env3)
+        action=agent3.act(env3)
+        agent3.move(action, env3)
+
+    visualizer3.visualize_floor_after()  
+    visualizer3.visualize_agentPath_after()
+
+
+
+
 
 if __name__ == "__main__":
     # Create an ArgumentParser object for parsing command-line arguments

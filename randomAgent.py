@@ -1,5 +1,6 @@
 import numpy as np
 from environment import Environment
+import matplotlib.pyplot as plt 
 class RandomAgent:
 
     def __init__(self, startX, startY):
@@ -8,10 +9,7 @@ class RandomAgent:
         self.path = [(startX, startY)]
         self.dirty_cells_cleaned = [0]
         
-        #check if dirty and update the floor environment
-        if(env.is_dirty(self.positionCol, self.positionRow)):
-            env.update_env(self.positionCol, self.positionRow)
-            self.dirty_cells_cleaned.append(self.dirty_cells_cleaned[-1] + 1)
+
 
     def action(self, env):
         #update agent environment
@@ -40,26 +38,13 @@ class RandomAgent:
     def randomAction(self):
         randomAct = np.random.choice(["up", "down", "right", "left"])
         return randomAct
-        
-
-    def visualize_agent_mevement(self, env):
-        pass
 
 
-#test
-env = Environment(10, 10)
-env.add_dirt(60)
-agent = RandomAgent(5, 5)
-env.visualize()
-print(env.get_stats())
+    def __str__(self):
+        return 'Random Agent'
 
-for i in range(100):
-    result = agent.action(env)
-    if(result == -1):
-        break
 
-env.visualize()
-print(env.get_stats())
+
 
 
 

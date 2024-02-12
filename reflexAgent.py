@@ -61,18 +61,10 @@ class reflexAgent:
     def visualize_agent_movement(self, env):
         #add functionality to visualize environment 
         print(self.curr_x, self.curr_y)
+    
+    def __str__(self):
+        return 'Reflex Agent'
 
 
-#test
-env = Environment(10, 10)
-env.add_dirt(60)
-agent = reflexAgent(5, 5)
-env.visualize()
-print(env.get_stats())
 
-for i in range(100):
-    result = agent.action(env)
-
-env.visualize()
-print(env.get_stats())
 

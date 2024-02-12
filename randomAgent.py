@@ -5,8 +5,13 @@ class RandomAgent:
     def __init__(self, startX, startY):
         self.positionCol = startX
         self.positionRow = startY
-        self.path = [(start_x, start_y)]
+        self.path = [(startX, startY)]
         self.dirty_cells_cleaned = [0]
+        
+        #check if dirty and update the floor environment
+        if(env.is_dirty(self.positionCol, self.positionRow)):
+            env.update_env(self.positionCol, self.positionRow)
+            self.dirty_cells_cleaned.append(self.dirty_cells_cleaned[-1] + 1)
 
     def action(self, env):
         #update agent environment
